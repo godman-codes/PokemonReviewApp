@@ -37,7 +37,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetPokemon(int pokeId)
         {
-            if (!_pokemonRepository.PokemomExists(pokeId))
+            if (!_pokemonRepository.PokemonExists(pokeId))
             {
                 return NotFound();
             }
@@ -54,7 +54,7 @@ namespace PokemonReviewApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetPokemonRating(int pokeId)
         {
-            if (!_pokemonRepository.PokemomExists(pokeId))
+            if (!_pokemonRepository.PokemonExists(pokeId))
             {
                 return NotFound();
             }

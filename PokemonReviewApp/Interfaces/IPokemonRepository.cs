@@ -8,6 +8,6 @@ namespace PokemonReviewApp.Interfaces
         Pokemon GetPokemon(int id);
         Pokemon GetPokemon(string name);
         decimal GetPokemonRating(int pokeId);
-        bool PokemomExists(int pokeId);
+        bool PokemonExists(int pokeId);
     }
 }

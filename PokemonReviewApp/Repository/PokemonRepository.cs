@@ -45,7 +45,7 @@ namespace PokemonReviewApp.Repository
 
         }
 
-        bool IPokemonRepository.PokemomExists(int pokeId)
+        bool IPokemonRepository.PokemonExists(int pokeId)
         {
             return _context.Pokemon.Any(p => p.Id == pokeId);
         }
