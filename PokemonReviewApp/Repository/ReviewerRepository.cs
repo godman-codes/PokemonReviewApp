@@ -1,4 +1,5 @@
-﻿using PokemonReviewApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 
@@ -14,7 +15,9 @@ namespace PokemonReviewApp.Repository
         }
         Reviewer IReviewerRepository.GetReviewer(int reviewerId)
         {
-            return _context.Reviewers.Where(r => r.Id == reviewerId).FirstOrDefault();
+            return _context.Reviewers.Where(r => r.Id == reviewerId).Include(e => e.Reviews).FirstOrDefault();
+            // what <include> does here is include the related entity i.e instead of 
+            // returning nulls as the realted entity itll return the values
         }
 
         ICollection<Reviewer> IReviewerRepository.GetReviewers()
