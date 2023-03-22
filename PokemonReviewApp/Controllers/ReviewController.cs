@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PokemonReviewApp.Dto;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
-using PokemonReviewApp.Repository;
 
 namespace PokemonReviewApp.Controllers
 {
@@ -54,10 +53,10 @@ namespace PokemonReviewApp.Controllers
             return Ok(review);
         }
 
-        [HttpGet("PokemonReviews/{pokeId}")]
+        [HttpGet("Pokemon/{pokeId}")]
         [ProducesResponseType(200, Type=typeof(IEnumerable<Review>))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemonReview(int pokeId)
+        public IActionResult GetReviewsForAPokemon(int pokeId)
         {
             if (!_pokemonRepository.PokemonExists(pokeId))
             {
