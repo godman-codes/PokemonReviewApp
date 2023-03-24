@@ -12,13 +12,15 @@ namespace PokemonReviewApp.Controllers
     {
         private readonly IPokemonRepository _pokemonRepository;
         private readonly IOwnerRepository _ownerRepository;
+        private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
 
-        public OwnerController( IOwnerRepository ownerRepository, IMapper mapper, IPokemonRepository pokemonRepository)
+        public OwnerController( IOwnerRepository ownerRepository, IMapper mapper, IPokemonRepository pokemonRepository, ICountryRepository countryRepository)
         {
             _pokemonRepository = pokemonRepository;
             _ownerRepository = ownerRepository;
             _mapper = mapper;
+            _countryRepository = countryRepository;
         }
 
         [HttpGet]
@@ -89,6 +91,39 @@ namespace PokemonReviewApp.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(pokemons);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateOwner([FromQuery] int countryId, [FromBody] OwnerDto ownerCreate)
+        {
+            if (ownerCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var owner = _ownerRepository.GetOwners().Where(o => o.LastName.Trim().ToUpper() == ownerCreate.LastName.TrimEnd().ToUpper()).FirstOrDefault();
+            if (owner != null)
+            {
+                ModelState.AddModelError("", "Owner already Exists");
+                return StatusCode(400, ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ownerMap = _mapper.Map<Owner>(ownerCreate);
+            ownerMap.Country = _countryRepository.GetCountry(countryId);
+            // this was beacuse if the entity issues caused by this owner model
+            // having a many to many relationship so we get the id of country we want to asign to it from the query
+            if (!_ownerRepository.CreateOwner(ownerMap))
+            {
+                ModelState.AddModelError("", "Something went wrong wile saving");
+                return StatusCode(400, ModelState);
+            }
+            return Ok("created succesfully");
+            
         }
 
     }
