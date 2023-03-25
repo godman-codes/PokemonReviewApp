@@ -102,6 +102,11 @@ namespace PokemonReviewApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (countryId == 0 || !(countryId > 0))
+            {
+                ModelState.AddModelError("", "Country Id must be specified");
+                return StatusCode(400, ModelState);
+            }
 
             var owner = _ownerRepository.GetOwners().Where(o => o.LastName.Trim().ToUpper() == ownerCreate.LastName.TrimEnd().ToUpper()).FirstOrDefault();
             if (owner != null)
