@@ -50,8 +50,29 @@ namespace PokemonReviewApp.Repository
             return _context.Pokemon.Any(p => p.Id == pokeId);
         }
 
-        public bool CreatePokemon(Pokemon pokemon)
+        public bool CreatePokemon(Pokemon pokemon, int ownerId, int categoryid)
         {
+            var pokemonOwnerEntity = _context.Owners.Where(
+                a => a.Id == ownerId
+                ).FirstOrDefault();
+            var category = _context.Categories.Where(
+                a => a.Id == categoryid
+                ).FirstOrDefault();
+            var pokemonOwner = new PokemonOwner()
+            {
+                Owner = pokemonOwnerEntity,
+                Pokemon = pokemon,
+            };
+            _context.Add(pokemonOwner);
+            var pokemonCategory = new PokemonCategory()
+            {
+                Category = category,
+                Pokemon = pokemon,
+            };
+            _context.Add(pokemonCategory);
+            // without the above block of code your join tables will 
+            // be empty
+
             _context.Add(pokemon);
             return Save();
         }
