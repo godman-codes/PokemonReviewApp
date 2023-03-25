@@ -19,18 +19,18 @@ namespace PokemonReviewApp.Repository
             //return the pokemon by the id and as a list
         }
 
-        Pokemon IPokemonRepository.GetPokemon(int id)
+        public Pokemon GetPokemon(int id)
         {
             return _context.Pokemon.Where(p => p.Id == id).FirstOrDefault();
             //return the pokemon with the id specified
         }
 
-        Pokemon IPokemonRepository.GetPokemon(string name)
+        public Pokemon GetPokemon(string name)
         {
             return _context.Pokemon.Where(p => p.Name == name).FirstOrDefault();
         }
 
-        decimal IPokemonRepository.GetPokemonRating(int pokeId)
+        public decimal GetPokemonRating(int pokeId)
         {
             var review = _context.Reviews.Where(p=> p.Pokemon.Id == pokeId);
             // get all reviews of that pokemon withe the specified id
@@ -45,9 +45,21 @@ namespace PokemonReviewApp.Repository
 
         }
 
-        bool IPokemonRepository.PokemonExists(int pokeId)
+        public bool PokemonExists(int pokeId)
         {
             return _context.Pokemon.Any(p => p.Id == pokeId);
+        }
+
+        public bool CreatePokemon(Pokemon pokemon)
+        {
+            _context.Add(pokemon);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var save = _context.SaveChanges();
+            return save > 0 ? true : false;
         }
     }
 }
