@@ -92,12 +92,12 @@ namespace PokemonReviewApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var reviewMap = _mapper.Map<Review>(reviewCreate);
             if (!_reviewerRepository.ReviewerExists(reviewerId))
             {
                 ModelState.AddModelError("", "Reviewer does not exist");
                 return StatusCode(400, ModelState);
             }
+            var reviewMap = _mapper.Map<Review>(reviewCreate);
 
             reviewMap.Reviewer = _reviewerRepository.GetReviewer(reviewerId);
 
@@ -115,6 +115,37 @@ namespace PokemonReviewApp.Controllers
             }
             return Ok("Created succesfully");
 
+        }
+
+        [HttpPut("{reviewId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto reviewUpdate)
+        {
+            if (reviewId != reviewUpdate.Id)
+            {
+                return BadRequest(ModelState);
+            }
+            if (reviewUpdate == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_reviewRepository.ReviewExists(reviewId))
+            {
+                return NotFound();
+            }
+            var reviewMap = _mapper.Map<Review>(reviewUpdate);
+            if (!_reviewRepository.UpdateReview(reviewMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while Updating");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
 
        
