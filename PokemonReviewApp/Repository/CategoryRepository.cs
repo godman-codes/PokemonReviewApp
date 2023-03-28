@@ -1,4 +1,5 @@
-﻿using PokemonReviewApp.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
 
@@ -24,6 +25,12 @@ namespace PokemonReviewApp.Repository
             // EntityState.Added when you see this the its a disconnected state but its very uncommon
             _context.Add(category);
             //_context.SaveChanges(); // this could also work instaed of a seperate save method
+            return Save();
+        }
+
+        public bool DeleteCategory(Category category)
+        {
+            _context.Remove(category);
             return Save();
         }
 
@@ -55,5 +62,6 @@ namespace PokemonReviewApp.Repository
             _context.Update(category);
             return Save();
         }
+
     }
 }
